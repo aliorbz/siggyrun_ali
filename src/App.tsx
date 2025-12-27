@@ -309,12 +309,15 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.code === 'Space' || e.code === 'ArrowUp') handleInput(e);
-    };
+  if (e.code === 'Space' || e.code === 'ArrowUp') {
+    e.preventDefault();     // ⬅️ THIS IS THE FIX
+    handleInput(e);
+  }
+};
     const onPointerDown = (e: PointerEvent) => {
       handleInput(e);
     };
-    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keydown', onKeyDown, { passive: false });
     window.addEventListener('pointerdown', onPointerDown);
     return () => {
       window.removeEventListener('keydown', onKeyDown);
@@ -404,9 +407,9 @@ const App: React.FC = () => {
           {gameState === 'GAMEOVER' && (
             <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-3 sm:p-4 z-40 animate-in fade-in zoom-in duration-300">
               <div className="flex flex-col items-center max-w-full space-y-2 sm:space-y-4">
-                <h2 className="text-3xl sm:text-5xl text-red-600 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)] tracking-tighter uppercase font-black italic">Broken</h2>
-                <p className="text-sm sm:text-xl text-green-200 opacity-80">Final Essence: <span className="text-[#76e891] font-mono font-bold">{Math.floor(score)}</span></p>
-                <div className={`px-5 sm:px-8 py-1.5 sm:py-2.5 border-4 border-[#76e891] bg-black hover:bg-[#76e891] hover:text-black transition-all cursor-pointer rounded-sm text-sm sm:text-xl font-bold tracking-widest uppercase shadow-[0_3px_0_#0b2d20] ${gameOverCooldown ? 'opacity-50 cursor-wait' : 'animate-bounce active:translate-y-1 active:shadow-none'}`}>
+                <h2 className="text-2xl sm:text-5xl leading-none !mb-0 sm:mb-4 text-red-600 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)] tracking-tighter uppercase font-black italic">Broken</h2>
+                <p className="text-sm !mt-0 !mb-2 sm:text-xl text-green-200 opacity-80">Final Essence: <span className="text-[#76e891] font-mono font-bold">{Math.floor(score)}</span></p>
+                <div className={`px-1 !mt-0 sm:px-8 py-0.5 sm:py-2 border-4 border-[#76e891] bg-black hover:bg-[#76e891] hover:text-black transition-all cursor-pointer rounded-sm text-sm sm:text-xl font-bold tracking-widest uppercase shadow-[0_3px_0_#0b2d20] ${gameOverCooldown ? 'opacity-50 cursor-wait' : 'animate-bounce active:translate-y-1 active:shadow-none'}`}>
                   {gameOverCooldown ? 'Restoring...' : 'Retry Rite'}
                 </div>
               </div>
